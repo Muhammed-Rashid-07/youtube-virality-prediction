@@ -1,0 +1,15 @@
+artifact_uri: file:///mnt/e/project2/mlruns/0/67787f06d5e54ccf8975bb641e0ab16d/artifacts
+end_time: 1700386611356
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 67787f06d5e54ccf8975bb641e0ab16d
+run_name: ada_boost
+run_uuid: 67787f06d5e54ccf8975bb641e0ab16d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1700386611326
+status: 4
+tags: []
+user_id: rashid

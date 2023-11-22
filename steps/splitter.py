@@ -6,11 +6,7 @@ from sklearn.tree import DecisionTreeClassifier
 from zenml import step
 from typing_extensions import Tuple,Annotated
 
-
 class SplitData:
-    def read_data():
-        df = pd.read_csv('../data/processed_data.csv')
-        return df
     def sklearn_split_train(df:pd.DataFrame):
         try:
             X = df.drop(['is_viral'], axis=1)
@@ -52,6 +48,7 @@ def drift_splitting(df: pd.DataFrame) -> Tuple[
 ]:
     try: 
         reference, current = train_test_split(df,test_size=0.2, random_state=23 )
+        logging.info(reference.columns)
         return reference, current
     except Exception as e:
         logging.error("error in drift report splitting. {}",format(e))

@@ -1,0 +1,15 @@
+artifact_uri: file:///mnt/e/project2/mlruns/0/491a291204d44eeeb54123e3949732c1/artifacts
+end_time: 1700386634191
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 491a291204d44eeeb54123e3949732c1
+run_name: random_forest
+run_uuid: 491a291204d44eeeb54123e3949732c1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1700386634078
+status: 4
+tags: []
+user_id: rashid

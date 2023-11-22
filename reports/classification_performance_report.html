@@ -1,0 +1,213 @@
+{
+  "id": "bf986050-4105-4018-bb14-a79bde80cdc5",
+  "timestamp": "2023-11-22T10:35:28.048353",
+  "metadata": {
+    "metric_presets": [
+      "ClassificationPreset"
+    ]
+  },
+  "tags": [],
+  "suite": {
+    "metrics": [
+      {
+        "probas_threshold": null,
+        "k": null,
+        "type": "evidently.metrics.classification_performance.confusion_matrix_metric.ClassificationConfusionMatrix",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        }
+      },
+      {
+        "type": "evidently.metrics.classification_performance.classification_quality_metric.ClassificationQualityMetric",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        },
+        "probas_threshold": null,
+        "k": null
+      },
+      {
+        "type": "evidently.metrics.classification_performance.class_balance_metric.ClassificationClassBalance",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        }
+      },
+      {
+        "type": "evidently.metrics.classification_performance.quality_by_class_metric.ClassificationQualityByClass",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        },
+        "probas_threshold": null,
+        "k": null
+      },
+      {
+        "type": "evidently.metrics.classification_performance.quality_by_feature_table.ClassificationQualityByFeatureTable",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        },
+        "columns": null,
+        "descriptors": null
+      }
+    ],
+    "metric_results": [
+      {
+        "type": "evidently.metrics.classification_performance.confusion_matrix_metric.ClassificationConfusionMatrixResult",
+        "current_matrix": {
+          "type": "evidently.metric_results.ConfusionMatrix",
+          "labels": [
+            0,
+            1
+          ],
+          "values": [
+            [
+              5390,
+              454
+            ],
+            [
+              294,
+              20333
+            ]
+          ]
+        },
+        "reference_matrix": null,
+        "target_names": null
+      },
+      {
+        "type": "evidently.metrics.classification_performance.classification_quality_metric.ClassificationQualityMetricResult",
+        "current": {
+          "type": "evidently.metric_results.DatasetClassificationQuality",
+          "accuracy": 0.9717426617808167,
+          "precision": 0.9781594265646798,
+          "recall": 0.9857468366703834,
+          "f1": 0.9819384749118656,
+          "roc_auc": null,
+          "log_loss": null,
+          "tpr": 0.9857468366703834,
+          "tnr": 0.9223134839151266,
+          "fpr": 0.07768651608487337,
+          "fnr": 0.014253163329616523,
+          "rate_plots_data": null,
+          "plot_data": null
+        },
+        "reference": null,
+        "target_name": "is_viral"
+      },
+      {
+        "type": "evidently.metrics.classification_performance.class_balance_metric.ClassificationClassBalanceResult",
+        "plot_data": {
+          "type": "evidently.metric_results.Histogram",
+          "current": {
+            "type": "evidently.metric_results.HistogramData",
+            "x": [
+              "1",
+              "0"
+            ],
+            "count": [
+              20627,
+              5844
+            ],
+            "name": null
+          },
+          "reference": null,
+          "current_log": null,
+          "reference_log": null
+        }
+      },
+      {
+        "type": "evidently.metrics.classification_performance.quality_by_class_metric.ClassificationQualityByClassResult",
+        "columns": {
+          "type": "evidently.metric_results.DatasetColumns",
+          "utility_columns": {
+            "type": "evidently.metric_results.DatasetUtilityColumns",
+            "date": null,
+            "id": null,
+            "target": "is_viral",
+            "prediction": "prediction"
+          },
+          "target_type": "cat",
+          "num_feature_names": [
+            "comment_count",
+            "comment_view_ratio",
+            "description_words_count",
+            "dislikes",
+            "like_dislike_ratio",
+            "likes",
+            "tag_count",
+            "time_since_publish",
+            "title_words_count"
+          ],
+          "cat_feature_names": [
+            "comments_disabled",
+            "ratings_disabled",
+            "video_error_or_removed"
+          ],
+          "text_feature_names": [],
+          "datetime_feature_names": [],
+          "target_names": null,
+          "task": "classification"
+        },
+        "current": {
+          "type": "evidently.metrics.classification_performance.quality_by_class_metric.ClassificationQuality",
+          "metrics": {
+            "0": {
+              "type": "evidently.metrics.classification_performance.objects.ClassMetric",
+              "precision": 0.9482758620689655,
+              "recall": 0.9223134839151266,
+              "f1": 0.9351145038167938,
+              "support": 5844.0
+            },
+            "1": {
+              "type": "evidently.metrics.classification_performance.objects.ClassMetric",
+              "precision": 0.9781594265646798,
+              "recall": 0.9857468366703834,
+              "f1": 0.9819384749118656,
+              "support": 20627.0
+            }
+          },
+          "roc_aucs": null
+        },
+        "reference": null
+      },
+      {
+        "type": "evidently.metrics.classification_performance.quality_by_feature_table.ClassificationQualityByFeatureTableResults",
+        "current": {
+          "type": "evidently.metric_results.StatsByFeature",
+          "plot_data": {},
+          "predictions": null
+        },
+        "reference": null,
+        "target_name": "",
+        "columns": []
+      }
+    ],
+    "tests": [],
+    "test_results": [],
+    "options": {
+      "color": null,
+      "render": null,
+      "custom": {}
+    }
+  },
+  "metrics_ids": [
+    1,
+    2,
+    0,
+    3,
+    4
+  ],
+  "test_ids": [],
+  "options": {
+    "color": null,
+    "render": null,
+    "custom": {}
+  }
+}

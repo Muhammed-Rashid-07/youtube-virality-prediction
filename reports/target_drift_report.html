@@ -1,0 +1,341 @@
+{
+  "id": "0ccf9064-8fe4-4951-ba14-1f9bb989fad2",
+  "timestamp": "2023-11-22T10:35:28.048382",
+  "metadata": {
+    "metric_presets": [
+      "TargetDriftPreset"
+    ]
+  },
+  "tags": [],
+  "suite": {
+    "metrics": [
+      {
+        "type": "evidently.metrics.data_drift.column_drift_metric.ColumnDriftMetric",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        },
+        "column_name": {
+          "type": "evidently.base_metric.ColumnName",
+          "name": "is_viral",
+          "display_name": "is_viral",
+          "dataset": "main",
+          "feature_class": null
+        },
+        "stattest": null,
+        "stattest_threshold": null
+      },
+      {
+        "type": "evidently.metrics.data_quality.column_correlations_metric.ColumnCorrelationsMetric",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        },
+        "column_name": {
+          "type": "evidently.base_metric.ColumnName",
+          "name": "is_viral",
+          "display_name": "is_viral",
+          "dataset": "main",
+          "feature_class": null
+        }
+      },
+      {
+        "type": "evidently.metrics.data_drift.column_drift_metric.ColumnDriftMetric",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        },
+        "column_name": {
+          "type": "evidently.base_metric.ColumnName",
+          "name": "prediction",
+          "display_name": "prediction",
+          "dataset": "main",
+          "feature_class": null
+        },
+        "stattest": null,
+        "stattest_threshold": null
+      },
+      {
+        "type": "evidently.metrics.data_quality.column_correlations_metric.ColumnCorrelationsMetric",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        },
+        "column_name": {
+          "type": "evidently.base_metric.ColumnName",
+          "name": "prediction",
+          "display_name": "prediction",
+          "dataset": "main",
+          "feature_class": null
+        }
+      },
+      {
+        "type": "evidently.metrics.data_drift.target_by_features_table.TargetByFeaturesTable",
+        "options": {
+          "color": null,
+          "render": null,
+          "custom": {}
+        },
+        "columns": null
+      }
+    ],
+    "metric_results": [
+      {
+        "type": "evidently.calculations.data_drift.ColumnDataDriftMetrics",
+        "column_name": "is_viral",
+        "column_type": "cat",
+        "stattest_name": "Jensen-Shannon distance",
+        "stattest_threshold": 0.1,
+        "drift_score": 0.0028485201941015905,
+        "drift_detected": false,
+        "current": {
+          "type": "evidently.calculations.data_drift.DriftStatsField",
+          "distribution": {
+            "type": "evidently.metric_results.Distribution",
+            "x": [
+              1,
+              0
+            ],
+            "y": [
+              5179,
+              1439
+            ]
+          },
+          "characteristic_examples": null,
+          "characteristic_words": null,
+          "small_distribution": {
+            "type": "evidently.metric_results.DistributionIncluded",
+            "x": [
+              0,
+              1
+            ],
+            "y": [
+              1439,
+              5179
+            ]
+          },
+          "correlations": null
+        },
+        "reference": {
+          "type": "evidently.calculations.data_drift.DriftStatsField",
+          "distribution": {
+            "type": "evidently.metric_results.Distribution",
+            "x": [
+              1,
+              0
+            ],
+            "y": [
+              20627,
+              5844
+            ]
+          },
+          "characteristic_examples": null,
+          "characteristic_words": null,
+          "small_distribution": {
+            "type": "evidently.metric_results.DistributionIncluded",
+            "x": [
+              0,
+              1
+            ],
+            "y": [
+              5844,
+              20627
+            ]
+          },
+          "correlations": null
+        },
+        "scatter": null
+      },
+      {
+        "type": "evidently.metrics.data_quality.column_correlations_metric.ColumnCorrelationsMetricResult",
+        "column_name": "is_viral",
+        "current": {
+          "cramer_v": {
+            "type": "evidently.metric_results.ColumnCorrelations",
+            "column_name": "is_viral",
+            "kind": "cramer_v",
+            "values": {
+              "type": "evidently.metric_results.DistributionIncluded",
+              "x": [
+                "comments_disabled",
+                "ratings_disabled",
+                "video_error_or_removed"
+              ],
+              "y": [
+                0.04693114887120828,
+                0.05364255837257741,
+                0.00648002787600689
+              ]
+            }
+          }
+        },
+        "reference": {
+          "cramer_v": {
+            "type": "evidently.metric_results.ColumnCorrelations",
+            "column_name": "is_viral",
+            "kind": "cramer_v",
+            "values": {
+              "type": "evidently.metric_results.DistributionIncluded",
+              "x": [
+                "comments_disabled",
+                "ratings_disabled",
+                "video_error_or_removed"
+              ],
+              "y": [
+                0.06270233294866125,
+                0.07155000187003481,
+                0.009254703818539867
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "evidently.calculations.data_drift.ColumnDataDriftMetrics",
+        "column_name": "prediction",
+        "column_type": "cat",
+        "stattest_name": "Jensen-Shannon distance",
+        "stattest_threshold": 0.1,
+        "drift_score": 0.003531971064221654,
+        "drift_detected": false,
+        "current": {
+          "type": "evidently.calculations.data_drift.DriftStatsField",
+          "distribution": {
+            "type": "evidently.metric_results.Distribution",
+            "x": [
+              1,
+              0
+            ],
+            "y": [
+              5224,
+              1394
+            ]
+          },
+          "characteristic_examples": null,
+          "characteristic_words": null,
+          "small_distribution": {
+            "type": "evidently.metric_results.DistributionIncluded",
+            "x": [
+              0,
+              1
+            ],
+            "y": [
+              1394,
+              5224
+            ]
+          },
+          "correlations": null
+        },
+        "reference": {
+          "type": "evidently.calculations.data_drift.DriftStatsField",
+          "distribution": {
+            "type": "evidently.metric_results.Distribution",
+            "x": [
+              1,
+              0
+            ],
+            "y": [
+              20787,
+              5684
+            ]
+          },
+          "characteristic_examples": null,
+          "characteristic_words": null,
+          "small_distribution": {
+            "type": "evidently.metric_results.DistributionIncluded",
+            "x": [
+              0,
+              1
+            ],
+            "y": [
+              5684,
+              20787
+            ]
+          },
+          "correlations": null
+        },
+        "scatter": null
+      },
+      {
+        "type": "evidently.metrics.data_quality.column_correlations_metric.ColumnCorrelationsMetricResult",
+        "column_name": "prediction",
+        "current": {
+          "cramer_v": {
+            "type": "evidently.metric_results.ColumnCorrelations",
+            "column_name": "prediction",
+            "kind": "cramer_v",
+            "values": {
+              "type": "evidently.metric_results.DistributionIncluded",
+              "x": [
+                "comments_disabled",
+                "ratings_disabled",
+                "video_error_or_removed"
+              ],
+              "y": [
+                0.058870532477318924,
+                0.0781337818038908,
+                0.0063503730052153285
+              ]
+            }
+          }
+        },
+        "reference": {
+          "cramer_v": {
+            "type": "evidently.metric_results.ColumnCorrelations",
+            "column_name": "prediction",
+            "kind": "cramer_v",
+            "values": {
+              "type": "evidently.metric_results.DistributionIncluded",
+              "x": [
+                "comments_disabled",
+                "ratings_disabled",
+                "video_error_or_removed"
+              ],
+              "y": [
+                0.06760874353103356,
+                0.09391158953906802,
+                0.009091940432403038
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "evidently.metrics.data_drift.target_by_features_table.TargetByFeaturesTableResults",
+        "current": {
+          "type": "evidently.metric_results.StatsByFeature",
+          "plot_data": {},
+          "predictions": null
+        },
+        "reference": null,
+        "target_name": null,
+        "columns": [],
+        "task": ""
+      }
+    ],
+    "tests": [],
+    "test_results": [],
+    "options": {
+      "color": null,
+      "render": null,
+      "custom": {}
+    }
+  },
+  "metrics_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "test_ids": [],
+  "options": {
+    "color": null,
+    "render": null,
+    "custom": {}
+  }
+}

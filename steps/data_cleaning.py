@@ -59,6 +59,7 @@ def cleaning_data(df: pd.DataFrame) -> pd.DataFrame:
     try:
         data_preprocessing = DataPreprocessing()
         data = data_preprocessing.handle_data(df = df)
+        logging.info(data.columns)
         return data
     except Exception as e:
         logging.error("Error in cleaning data")

@@ -1,0 +1,15 @@
+artifact_uri: file:///mnt/e/project2/mlruns/0/adb420073edc4ca6a191d9ef4e8c70e9/artifacts
+end_time: 1700386634323
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: adb420073edc4ca6a191d9ef4e8c70e9
+run_name: gradient_boost
+run_uuid: adb420073edc4ca6a191d9ef4e8c70e9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1700386634292
+status: 4
+tags: []
+user_id: rashid

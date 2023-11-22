@@ -49,7 +49,7 @@ class IngestData:
         return df
     
 
-@step(enable_cache = False)
+@step(enable_cache = True)
 def ingest_df() -> pd.DataFrame:
     """
     

@@ -9,7 +9,8 @@ from zenml.client import Client
 from zenml.integrations.mlflow.experiment_trackers import (
     MLFlowExperimentTracker,
 )
-
+import mlflow
+from mlflow.pyfunc import PyFuncModel
 experiment_tracker = Client().active_stack.experiment_tracker
 
 if not experiment_tracker or not isinstance(
@@ -22,15 +23,21 @@ if not experiment_tracker or not isinstance(
 
 
 @step(experiment_tracker=experiment_tracker.name, enable_cache=False)
-def evaluate_model(model:ClassifierMixin, X_test:pd.DataFrame, y_test:pd.Series,model_name:str) -> float:
+def evaluate_model(model:PyFuncModel|ClassifierMixin, X_test:pd.DataFrame, y_test:pd.Series,model_name:str) -> float:
     y_pred = model.predict(X_test)
     accuracy_scr = accuracy_score(y_true=y_test, y_pred=y_pred)
+    mlflow.log_metric("accuracy", accuracy_scr)
     precision_scr = precision_score(y_true=y_test, y_pred=y_pred)
+    mlflow.log_metric("precision", precision_scr)
     recall_scr = recall_score(y_true=y_test, y_pred=y_pred)
+    mlflow.log_metric("recall", recall_scr)
     f1_scr = f1_score(y_pred=y_pred, y_true=y_test)
+    mlflow.log_metric("f1_score", f1_scr)
     logging.info(f"model: {model_name},\naccuracy score: {accuracy_scr}, \nprecision score: {precision_scr}, \nrecall score: {recall_scr}, \nf1_score: {f1_scr}")
     logging.info("experiment tracker: ",experiment_tracker.name)
     return accuracy_scr
+
+
 
 
 
