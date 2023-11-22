@@ -2,10 +2,8 @@ import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier, AdaBoostClassifier, RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.base import ClassifierMixin
-import joblib
 import time
 from zenml import step
-from typing_extensions import Tuple, Annotated
 from zenml.client import Client
 import mlflow
 from zenml.integrations.mlflow.experiment_trackers import (
@@ -54,8 +52,6 @@ def train_and_save_model(model_name:str, X_train:pd.DataFrame, y_train:pd.Series
     print(f"Training time taken to complete: {elapsed_time:.2f} seconds")
     return model
     
-
-
 
 
 @step(enable_cache=False)
