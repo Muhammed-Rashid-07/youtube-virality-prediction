@@ -16,10 +16,11 @@ class IngestData:
             data_path (str): path of the datafile
         """
         
-        storage_account_key = os.getenv('STORAGE_ACCOUNT_KEY')
-        storage_account_name = os.getenv('STORAGE_ACCOUNT_NAME')
-        connection_string = os.getenv('CONNECTION_STRING')
-        container_name = os.getenv('CONTAINER_NAME')
+        storage_account_key = "Tbj9y/FEdT6Vel4FMMTj5cunzyJt4iEZpEMiw6Xb0uztrVuljofVIcwCQYSsRXECl9JcANDIkwnT+AStIrqu/A=="
+        storage_account_name = "mlprojectdemo7552488106"
+        connection_string = "DefaultEndpointsProtocol=https;AccountName=mlprojectdemo7552488106;AccountKey=Tbj9y/FEdT6Vel4FMMTj5cunzyJt4iEZpEMiw6Xb0uztrVuljofVIcwCQYSsRXECl9JcANDIkwnT+AStIrqu/A==;EndpointSuffix=core.windows.net"
+        container_name = "youtube-data"
+        
     
         blob_service_client = BlobServiceClient.from_connection_string(connection_string)
         container_client = blob_service_client.get_container_client(container_name)

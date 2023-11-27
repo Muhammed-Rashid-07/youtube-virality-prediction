@@ -9,7 +9,7 @@ import streamlit as st
 from steps.prediction_service_loader import prediction_service_loader
 import datetime
 import numpy as np
-from pipelines.monitoring_pipeline import monitoring_pipeline
+
 
 def prediction():
     st.title("Youtube Virality Prediction")
