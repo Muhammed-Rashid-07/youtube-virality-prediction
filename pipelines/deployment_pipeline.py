@@ -38,8 +38,8 @@ def deploy_and_predict() -> None:
     _, inference_data, _, _ = sklearn_split_data(df)
     reference_data, current_data = drift_splitting(df)
 
-    # Monitor model performance with drift detection
     model_deployment_service = prediction_service_loader('train_pipeline')
+    # Monitor model performance with drift detection
     model_monitoring(reference_data=reference_data, current_data=current_data, model=model_deployment_service)
 
     # Make predictions using the deployed model
