@@ -5,6 +5,8 @@ from evidently.report import Report
 from zenml import step
 from sklearn.base import ClassifierMixin
 from mlflow.pyfunc import PyFuncModel
+from zenml.services import BaseService
+
 #from zenml.materializers.base_materializer import BaseMaterializer
 
 
@@ -18,8 +20,12 @@ class MonitoringPipeline():
         self.categorical_features = categorical_features
         self.column_mapping = self.create_column_mapping()
 
-        self.classification_performance_report = Report(metrics=[ClassificationPreset()])
-        self.target_drift_report = Report(metrics=[TargetDriftPreset()])
+        self.classification_performance_report = Report(
+            metrics=[ClassificationPreset()]
+            )
+        self.target_drift_report = Report(
+            metrics=[TargetDriftPreset()]
+            )
         self.data_quality_report = Report(metrics=[DataQualityPreset()])
 
     def create_column_mapping(self):
@@ -31,17 +37,18 @@ class MonitoringPipeline():
         return column_mapping
 
     def run_reports(self):
-        self._run_regression_performance_report()
-        self._run_target_drift_report()
+        self._run_classification_performance_report()
         self._run_data_quality_report()
+        self._run_target_drift_report()
+        
 
-    def _run_regression_performance_report(self):
+    def _run_classification_performance_report(self):
         self.classification_performance_report.run(
             current_data=self.reference_data,
             reference_data=None,
             column_mapping=self.column_mapping
         )
-        self.classification_performance_report.save('reports/classification_performance_report.html')
+        self.classification_performance_report.save_html('reports/classification_performance_report.html')
 
     def _run_target_drift_report(self):
         self.target_drift_report.run(
@@ -49,7 +56,7 @@ class MonitoringPipeline():
             current_data=self.current_data,
             column_mapping=self.column_mapping
         )
-        self.target_drift_report.save('reports/target_drift_report.html')
+        self.target_drift_report.save_html('reports/target_drift_report.html')
 
     def _run_data_quality_report(self):
         self.data_quality_report.run(
@@ -57,12 +64,10 @@ class MonitoringPipeline():
             current_data=self.current_data,
             column_mapping=self.column_mapping
         )
-        self.data_quality_report.save('reports/data_quality_report.html')
+        self.data_quality_report.save_html('reports/data_quality_report.html')      
 
-
-
-@step(enable_cache = True)
-def model_monitoring(reference_data: pd.DataFrame, current_data: pd.DataFrame, model:PyFuncModel|ClassifierMixin):
+@step(enable_cache = False)
+def model_monitoring(reference_data: pd.DataFrame, current_data: pd.DataFrame, model:ClassifierMixin|BaseService):
     target_column = "is_viral"
     prediction = 'prediction'
     numerical_features = ['likes','dislikes','comment_count','time_since_publish', 'tag_count', 'like_dislike_ratio','comment_view_ratio','title_words_count','description_words_count']
@@ -86,4 +91,5 @@ def model_monitoring(reference_data: pd.DataFrame, current_data: pd.DataFrame, m
         categorical_features=categorical_features
     )
     monitoring_pipeline.run_reports()
+    
     

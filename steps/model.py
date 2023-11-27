@@ -54,8 +54,9 @@ def train_and_save_model(model_name:str, X_train:pd.DataFrame, y_train:pd.Series
     
 
 
-@step(enable_cache=False)
+@step(enable_cache=True, experiment_tracker=experiment_tracker.name)
 def test_model(model_name:str, stage:str) -> pyfunc.PyFuncModel:
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     model = mlflow.pyfunc.load_model(f"models:/{model_name}/{stage}")
+    mlflow.sklearn.log_model(model,f"{model_name}")
     return model

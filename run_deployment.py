@@ -2,7 +2,7 @@ import click
 import logging
 from typing import cast
 from rich import print
-from pipelines.deployment_pipeline import continuous_deployment_pipeline
+from pipelines.deployment_pipeline import continuous_deployment_pipeline,inference_pipeline
 from zenml.integrations.mlflow.mlflow_utils import get_tracking_uri
 from zenml.integrations.mlflow.model_deployers.mlflow_model_deployer import (
     MLFlowModelDeployer,
@@ -44,6 +44,12 @@ def run_main(config:str, min_accuracy:float ):
             workers=3,
             timeout=60
         )
+    if predict:
+        inference_pipeline(
+            pipeline_name="continuous_deployment_pipeline",
+            pipeline_step_name="mlflow_model_registry_deployer_step",
+    
+        )
     
     print(
         "You can run:\n "
@@ -57,7 +63,7 @@ def run_main(config:str, min_accuracy:float ):
 # fetch existing services with same pipeline name, step name and model name
     existing_services = mlflow_model_deployer_component.find_model_server(
         pipeline_name = "continuous_deployment_pipeline",
-        pipeline_step_name = "mlflow_model_deployer_step",
+        pipeline_step_name = "mlflow_model_registry_deployer_step",
     )
     
 

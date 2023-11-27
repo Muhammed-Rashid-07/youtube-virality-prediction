@@ -43,14 +43,14 @@ class IngestData:
         self.path = sas_url
         
     
-    def get_data(self):
+    def get_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.path)
         logging.info("Reading csv file successfully completed.")
         return df
     
 
 @step(enable_cache = True)
-def ingest_df() -> pd.DataFrame:
+def ingest_df(sample:bool=False) -> pd.DataFrame:
     """
     
     ZenML step for ingesting data from a CSV file.
@@ -67,7 +67,10 @@ def ingest_df() -> pd.DataFrame:
         ingest_data = IngestData()
         df = ingest_data.get_data()
         logging.info("Ingesting data completed")
-        return df
+        if sample:
+            return df.sample(n=1000, random_state=1)
+        else:
+            return df
     except Exception as e:
         #Log an error message if data ingestion fails and raise the exception
         logging.error("Error while ingesting data")
