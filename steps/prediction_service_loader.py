@@ -8,51 +8,26 @@ from zenml import step
 from zenml.services import BaseService
 
 
-# @step(enable_cache=False)
-# def prediction_service_loader(
-#     pipeline_name: str,
-#     pipeline_step_name: str,
-#     model_name: str="model",
-#     running: bool = True,
-# ) -> MLFlowDeploymentService:
-#     """Get the prediction service started by the deployment pipeline.
-
-#     Args:
-#         pipeline_name: name of the pipeline that deployed the MLflow prediction
-#             server
-#         step_name: the name of the step that deployed the MLflow prediction
-#             server
-#         running: when this flag is set, the step only returns a running service
-#         model_name: the name of the model that is deployed
-#     """
-#     # get the MLflow model deployer stack component
-#     model_deployer = MLFlowModelDeployer.get_active_model_deployer()
-
-#     # fetch existing services with same pipeline name, step name and model name
-#     existing_services = model_deployer.find_model_server(
-#         pipeline_name=pipeline_name,
-#         pipeline_step_name=pipeline_step_name,
-#         model_name=model_name,
-#         running=running,
-#     )
-
-#     if not existing_services:
-#         raise RuntimeError(
-#             f"No MLflow prediction service deployed by the "
-#             f"{pipeline_step_name} step in the {pipeline_name} "
-#             f"pipeline for the '{model_name}' model is currently "
-#             f"running."
-#         )
-#     print(existing_services)
-#     print(type(existing_services))
-#     return existing_services[0]
-
-
 @step(enable_cache=False)
-def prediction_service_loader(pipeline_name:str) -> BaseService:
+def prediction_service_loader(pipeline_name: str) -> BaseService:
+    """
+    Load the prediction service associated with the specified pipeline name.
+
+    Args:
+        pipeline_name (str): Name of the pipeline for which the prediction service is loaded.
+
+    Returns:
+        BaseService: Loaded prediction service associated with the specified pipeline.
+    """
+    # Get the active ZenML client
     client = Client()
+
+    # Get the active model deployer from the client's active stack
     model_deployer = client.active_stack.model_deployer
-    service = model_deployer.find_model_server(
-        pipeline_name=pipeline_name,
-    )
+
+    # Find the model server (prediction service) for the specified pipeline name
+    # Note: It returns a list of services, and we assume the first one is the desired service
+    service = model_deployer.find_model_server(pipeline_name=pipeline_name)
+
+    # Return the loaded prediction service
     return service[0]

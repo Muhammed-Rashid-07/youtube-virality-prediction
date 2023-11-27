@@ -66,22 +66,43 @@ class MonitoringPipeline():
         )
         self.data_quality_report.save_html('reports/data_quality_report.html')      
 
-@step(enable_cache = False)
-def model_monitoring(reference_data: pd.DataFrame, current_data: pd.DataFrame, model:ClassifierMixin|BaseService):
+@step(enable_cache=False)
+def model_monitoring(reference_data: pd.DataFrame, current_data: pd.DataFrame, model: ClassifierMixin | BaseService):
+    """
+    Perform model monitoring by generating and saving classification performance,
+    target drift, and data quality reports.
+
+    Args:
+        reference_data (pd.DataFrame): DataFrame with reference data for monitoring.
+        current_data (pd.DataFrame): DataFrame with current data for monitoring.
+        model (ClassifierMixin | BaseService): Trained machine learning model.
+
+    Returns:
+        None
+    """
+    # Define target column and prediction column
     target_column = "is_viral"
     prediction = 'prediction'
-    numerical_features = ['likes','dislikes','comment_count','time_since_publish', 'tag_count', 'like_dislike_ratio','comment_view_ratio','title_words_count','description_words_count']
-    categorical_features = ['comments_disabled','ratings_disabled','video_error_or_removed']
-    
-    features = ['likes', 'dislikes', 'comment_count', 'comments_disabled',
-       'ratings_disabled', 'video_error_or_removed', 'time_since_publish',
-       'tag_count', 'like_dislike_ratio', 'comment_view_ratio',
-       'title_words_count', 'description_words_count']
+
+    # Define numerical and categorical features used in the monitoring
+    numerical_features = ['likes', 'dislikes', 'comment_count', 'time_since_publish', 'tag_count',
+                          'like_dislike_ratio', 'comment_view_ratio', 'title_words_count', 'description_words_count']
+    categorical_features = ['comments_disabled', 'ratings_disabled', 'video_error_or_removed']
+
+    # Define the features used for predictions
+    features = ['likes', 'dislikes', 'comment_count', 'comments_disabled', 'ratings_disabled',
+                'video_error_or_removed', 'time_since_publish', 'tag_count', 'like_dislike_ratio',
+                'comment_view_ratio', 'title_words_count', 'description_words_count']
+
+    # Generate predictions for reference and current data
     ref_prediction = model.predict(reference_data[features])
     current_prediction = model.predict(current_data[features])
 
+    # Add prediction columns to reference and current data
     reference_data['prediction'] = ref_prediction
     current_data['prediction'] = current_prediction
+
+    # Create a MonitoringPipeline instance
     monitoring_pipeline = MonitoringPipeline(
         reference_data=reference_data,
         current_data=current_data,
@@ -90,6 +111,7 @@ def model_monitoring(reference_data: pd.DataFrame, current_data: pd.DataFrame, m
         numerical_features=numerical_features,
         categorical_features=categorical_features
     )
+
+    # Run and save monitoring reports
     monitoring_pipeline.run_reports()
-    
-    
+

@@ -9,44 +9,42 @@ import logging
 from zenml.services import BaseService
 
 
-# @step
-# def predictor(
-#     service: MLFlowDeploymentService,
-#     data: str
-# ) -> np.ndarray:
-#     """Run a inference request against a prediction service."""
-#     service.start(timeout=10)  # should be a NOP if already started
-#     data = json.loads(data)
-#     data.pop("columns")
-#     data.pop("index")
-#     columns_for_df =['likes','dislikes','comment_count',
-#                      'comments_disabled','ratings_disabled','video_error_or_removed',
-#                      'time_since_publish','tag_count',
-#                      'like_dislike_ratio','comment_view_ratio','title_words_count','description_words_count'
-#                      ]
-#     df = pd.DataFrame(data["data"], columns=columns_for_df)
-#     json_list = json.loads(json.dumps(list(df.T.to_dict().values())))
-#     data = np.array(json_list)
-#     prediction = service.predict(data)
-#     logging.info(prediction)
-#     return prediction
-
 @step(enable_cache=True)
 def predictor(
     service: BaseService,
     data: pd.DataFrame,
 ) -> np.ndarray:
-    """Run a inference request against a prediction service."""
+    """
+    Run an inference request against a prediction service.
+
+    Args:
+        service (BaseService): The prediction service to use.
+        data (pd.DataFrame): The input data for inference.
+
+    Returns:
+        np.ndarray: Array containing the predictions.
+    """
+    # Start the prediction service
     service.start(timeout=300)
+
+    # Log the columns of the input data
     logging.info(data.columns)
-    print(
-        f"Running predictions on data (single individual): {data.to_numpy()[0]}"
-    )
+
+    # Display the input data for the first individual
+    print(f"Running predictions on data (single individual): {data.to_numpy()[0]}")
+
+    # Convert the input data to JSON format
     df = json.loads(json.dumps(list(data.T.to_dict().values())))
     json_data = np.array(df)
+
+    # Make predictions using the prediction service
     prediction = service.predict(json_data)
+
+    # Log the predictions
     logging.info(prediction)
-    print(
-        f"Prediction (for single example slice) is: {bool(prediction.tolist()[0])}"
-    )
+
+    # Display the prediction for the first example slice
+    print(f"Prediction (for single example slice) is: {bool(prediction.tolist()[0])}")
+
+    # Return the predictions
     return prediction

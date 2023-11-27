@@ -11,10 +11,19 @@ from zenml.integrations.mlflow.experiment_trackers import (
 )
 from mlflow import pyfunc
 
-
+# Define the MLflow tracking URI for the local store
 MLFLOW_TRACKING_URI = 'file:/Users/rashid/Library/Application Support/zenml/local_stores/b05be5b6-bf92-4e78-8a17-a8125e4a865e/mlruns'
 
-def get_model(model:str) -> ClassifierMixin:
+def get_model(model: str) -> ClassifierMixin:
+    """
+    Create and return an instance of a scikit-learn classifier.
+
+    Args:
+        model (str): The name of the model to create.
+
+    Returns:
+        ClassifierMixin: An instance of the specified classifier.
+    """
     if model == "gradient_boost":
         mlflow.sklearn.autolog()
         return GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
@@ -25,10 +34,11 @@ def get_model(model:str) -> ClassifierMixin:
     if model == 'random_forest':
         mlflow.sklearn.autolog()
         return RandomForestClassifier(n_estimators=100, random_state=42, max_depth=5)
-    
 
+# Get the active MLFlow experiment tracker from the ZenML client
 experiment_tracker = Client().active_stack.experiment_tracker
 
+# Ensure that the active stack contains an MLFlow experiment tracker
 if not experiment_tracker or not isinstance(
     experiment_tracker, MLFlowExperimentTracker
 ):
@@ -37,11 +47,23 @@ if not experiment_tracker or not isinstance(
         "this example to work."
     )
 
+@step(experiment_tracker=experiment_tracker.name, enable_cache=False)  
+def train_and_save_model(model_name: str, X_train: pd.DataFrame, y_train: pd.Series) -> ClassifierMixin:
+    """
+    Train a scikit-learn model and save it using MLflow.
 
-@step(experiment_tracker = experiment_tracker.name, enable_cache=False)  
-def train_and_save_model(model_name:str, X_train:pd.DataFrame, y_train:pd.Series) -> ClassifierMixin:
+    Args:
+        model_name (str): The name of the model to train.
+        X_train (pd.DataFrame): The training features.
+        y_train (pd.Series): The training labels.
+
+    Returns:
+        ClassifierMixin: The trained model.
+    """
+    # Create an instance of the specified model
     model = get_model(model_name)
 
+    # Train the model
     print(f"Training the {model_name} model...")
     start_time = time.time()
     model.fit(X_train, y_train)
@@ -52,11 +74,19 @@ def train_and_save_model(model_name:str, X_train:pd.DataFrame, y_train:pd.Series
     print(f"Training time taken to complete: {elapsed_time:.2f} seconds")
     return model
     
-
-
 @step(enable_cache=True, experiment_tracker=experiment_tracker.name)
-def test_model(model_name:str, stage:str) -> pyfunc.PyFuncModel:
+def test_model(model_name: str, stage: str) -> pyfunc.PyFuncModel:
+    """
+    Load and return a model from MLflow for testing.
+
+    Args:
+        model_name (str): The name of the model to load.
+        stage (str): The MLflow model stage to load.
+
+    Returns:
+        pyfunc.PyFuncModel: The loaded PyFuncModel.
+    """
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     model = mlflow.pyfunc.load_model(f"models:/{model_name}/{stage}")
-    mlflow.sklearn.log_model(model,f"{model_name}")
+    mlflow.sklearn.log_model(model, f"{model_name}")
     return model
