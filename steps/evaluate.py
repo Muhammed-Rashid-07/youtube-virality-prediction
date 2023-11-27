@@ -11,6 +11,7 @@ from zenml.integrations.mlflow.experiment_trackers import (
 )
 import mlflow
 from mlflow.pyfunc import PyFuncModel
+from typing_extensions import Union
 
 # Get the active MLFlow experiment tracker from the ZenML client
 experiment_tracker = Client().active_stack.experiment_tracker
@@ -27,7 +28,7 @@ if not experiment_tracker or not isinstance(
 # Define a ZenML step for model evaluation using MLFlow
 @step(experiment_tracker=experiment_tracker.name, enable_cache=False)
 def evaluate_model(
-    model: PyFuncModel | ClassifierMixin,
+    model: Union[PyFuncModel, ClassifierMixin],
     X_test: pd.DataFrame,
     y_test: pd.Series,
     model_name: str,

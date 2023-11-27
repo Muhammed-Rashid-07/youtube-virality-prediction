@@ -4,7 +4,7 @@ from zenml import step
 from typing_extensions import Union
 
 class DataPreprocessing:
-    def handle_data(self, df: pd.DataFrame) -> pd.DataFrame | pd.Series:
+    def handle_data(self, df: pd.DataFrame) -> Union[pd.DataFrame, pd.Series]:
         """
         Preprocesses the input DataFrame.
 

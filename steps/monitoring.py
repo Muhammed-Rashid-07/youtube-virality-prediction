@@ -6,6 +6,7 @@ from zenml import step
 from sklearn.base import ClassifierMixin
 from mlflow.pyfunc import PyFuncModel
 from zenml.services import BaseService
+from typing_extensions import Union
 
 #from zenml.materializers.base_materializer import BaseMaterializer
 
@@ -67,7 +68,11 @@ class MonitoringPipeline():
         self.data_quality_report.save_html('reports/data_quality_report.html')      
 
 @step(enable_cache=False)
-def model_monitoring(reference_data: pd.DataFrame, current_data: pd.DataFrame, model: ClassifierMixin | BaseService):
+def model_monitoring(
+    reference_data: pd.DataFrame, 
+    current_data: pd.DataFrame, 
+    model: Union[ClassifierMixin, BaseService] 
+):
     """
     Perform model monitoring by generating and saving classification performance,
     target drift, and data quality reports.
