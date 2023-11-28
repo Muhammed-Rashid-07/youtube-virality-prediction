@@ -15,7 +15,6 @@ azure-mgmt-resource==23.0.1
 azure-storage-blob==12.19.0
 bcrypt==4.0.1
 blinker==1.7.0
-boto3==1.33.1
 botocore==1.33.1
 Brotli==1.1.0
 cachetools==5.3.2
