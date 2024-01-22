@@ -1,6 +1,6 @@
-from typing import Tuple
 
 import pandas as pd
+from typing import Tuple
 from sklearn.base import ClassifierMixin
 from typing_extensions import Annotated
 

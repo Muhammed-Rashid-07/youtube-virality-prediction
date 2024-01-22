@@ -9,7 +9,13 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
+
+# Define a class for ingesting data from Azure Blob Storage
 class IngestData:
+    """
+        Initializes the IngestData class with Azure Blob Storage connection details.
+    """
+    # Retrieve Azure Storage account information from environment variables
     def __init__(self):
         """
         Args:
@@ -67,10 +73,7 @@ def ingest_df(sample:bool=False) -> pd.DataFrame:
         ingest_data = IngestData()
         df = ingest_data.get_data()
         logging.info("Ingesting data completed")
-        if sample:
-            return df.sample(n=1000, random_state=1)
-        else:
-            return df
+        return df
     except Exception as e:
         #Log an error message if data ingestion fails and raise the exception
         logging.error("Error while ingesting data")

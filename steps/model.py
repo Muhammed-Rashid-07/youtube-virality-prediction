@@ -11,8 +11,6 @@ from zenml.integrations.mlflow.experiment_trackers import (
 )
 from mlflow import pyfunc
 
-# Define the MLflow tracking URI for the local store
-MLFLOW_TRACKING_URI = 'file:/Users/rashid/Library/Application Support/zenml/local_stores/b05be5b6-bf92-4e78-8a17-a8125e4a865e/mlruns'
 
 def get_model(model: str) -> ClassifierMixin:
     """
@@ -35,8 +33,10 @@ def get_model(model: str) -> ClassifierMixin:
         mlflow.sklearn.autolog()
         return RandomForestClassifier(n_estimators=100, random_state=42, max_depth=5)
 
+
 # Get the active MLFlow experiment tracker from the ZenML client
 experiment_tracker = Client().active_stack.experiment_tracker
+
 
 # Ensure that the active stack contains an MLFlow experiment tracker
 if not experiment_tracker or not isinstance(
@@ -48,7 +48,7 @@ if not experiment_tracker or not isinstance(
     )
 
 @step(experiment_tracker=experiment_tracker.name, enable_cache=False)  
-def train_and_save_model(model_name: str, X_train: pd.DataFrame, y_train: pd.Series) -> ClassifierMixin:
+def train_model(model_name: str, X_train: pd.DataFrame, y_train: pd.Series) -> ClassifierMixin:
     """
     Train a scikit-learn model and save it using MLflow.
 
@@ -74,19 +74,3 @@ def train_and_save_model(model_name: str, X_train: pd.DataFrame, y_train: pd.Ser
     print(f"Training time taken to complete: {elapsed_time:.2f} seconds")
     return model
     
-@step(enable_cache=True, experiment_tracker=experiment_tracker.name)
-def test_model(model_name: str, stage: str) -> pyfunc.PyFuncModel:
-    """
-    Load and return a model from MLflow for testing.
-
-    Args:
-        model_name (str): The name of the model to load.
-        stage (str): The MLflow model stage to load.
-
-    Returns:
-        pyfunc.PyFuncModel: The loaded PyFuncModel.
-    """
-    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-    model = mlflow.pyfunc.load_model(f"models:/{model_name}/{stage}")
-    mlflow.sklearn.log_model(model, f"{model_name}")
-    return model

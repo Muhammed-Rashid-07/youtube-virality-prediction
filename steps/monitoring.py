@@ -8,7 +8,6 @@ from mlflow.pyfunc import PyFuncModel
 from zenml.services import BaseService
 from typing_extensions import Union
 
-#from zenml.materializers.base_materializer import BaseMaterializer
 
 
 class MonitoringPipeline():
@@ -29,6 +28,7 @@ class MonitoringPipeline():
             )
         self.data_quality_report = Report(metrics=[DataQualityPreset()])
 
+
     def create_column_mapping(self):
         column_mapping = ColumnMapping()
         column_mapping.target = self.target
@@ -36,6 +36,7 @@ class MonitoringPipeline():
         column_mapping.numerical_features = self.numerical_features
         column_mapping.categorical_features = self.categorical_features
         return column_mapping
+
 
     def run_reports(self):
         self._run_classification_performance_report()
@@ -45,11 +46,12 @@ class MonitoringPipeline():
 
     def _run_classification_performance_report(self):
         self.classification_performance_report.run(
-            current_data=self.reference_data,
-            reference_data=None,
+            current_data=self.current_data,
+            reference_data=self.reference_data,
             column_mapping=self.column_mapping
         )
         self.classification_performance_report.save_html('reports/classification_performance_report.html')
+
 
     def _run_target_drift_report(self):
         self.target_drift_report.run(
@@ -59,6 +61,7 @@ class MonitoringPipeline():
         )
         self.target_drift_report.save_html('reports/target_drift_report.html')
 
+
     def _run_data_quality_report(self):
         self.data_quality_report.run(
             reference_data=self.reference_data,
@@ -66,6 +69,8 @@ class MonitoringPipeline():
             column_mapping=self.column_mapping
         )
         self.data_quality_report.save_html('reports/data_quality_report.html')      
+
+
 
 @step(enable_cache=False)
 def model_monitoring(
@@ -94,18 +99,22 @@ def model_monitoring(
                           'like_dislike_ratio', 'comment_view_ratio', 'title_words_count', 'description_words_count']
     categorical_features = ['comments_disabled', 'ratings_disabled', 'video_error_or_removed']
 
+
     # Define the features used for predictions
     features = ['likes', 'dislikes', 'comment_count', 'comments_disabled', 'ratings_disabled',
                 'video_error_or_removed', 'time_since_publish', 'tag_count', 'like_dislike_ratio',
                 'comment_view_ratio', 'title_words_count', 'description_words_count']
 
+
     # Generate predictions for reference and current data
     ref_prediction = model.predict(reference_data[features])
     current_prediction = model.predict(current_data[features])
 
+
     # Add prediction columns to reference and current data
     reference_data['prediction'] = ref_prediction
     current_data['prediction'] = current_prediction
+
 
     # Create a MonitoringPipeline instance
     monitoring_pipeline = MonitoringPipeline(
@@ -117,6 +126,55 @@ def model_monitoring(
         categorical_features=categorical_features
     )
 
+
     # Run and save monitoring reports
     monitoring_pipeline.run_reports()
 
+
+
+
+def update_monitoring(
+    reference_data,
+    current_data,
+    data_point_df,
+    model
+):
+    target_column = "is_viral"
+    prediction = 'prediction'
+
+
+    # Define numerical and categorical features used in the monitoring
+    numerical_features = ['likes', 'dislikes', 'comment_count', 'time_since_publish', 'tag_count',
+                          'like_dislike_ratio', 'comment_view_ratio', 'title_words_count', 'description_words_count']
+    categorical_features = ['comments_disabled', 'ratings_disabled', 'video_error_or_removed']
+
+
+    # Define the features used for predictions
+    features = ['likes', 'dislikes', 'comment_count', 'comments_disabled', 'ratings_disabled',
+                'video_error_or_removed', 'time_since_publish', 'tag_count', 'like_dislike_ratio',
+                'comment_view_ratio', 'title_words_count', 'description_words_count']
+
+
+    current_data = pd.concat([current_data, data_point_df], ignore_index=True)
+    
+
+    ref_prediction = model.predict(reference_data[features])
+    current_prediction = model.predict(current_data[features])    
+
+
+    reference_data['prediction'] = ref_prediction
+    current_data['prediction'] = current_prediction
+    
+    
+    # Run the monitoring pipeline with the updated data
+    monitoring_pipeline = MonitoringPipeline(
+        reference_data=reference_data,
+        current_data=current_data,
+        target=target_column,
+        prediction=prediction,
+        numerical_features=numerical_features,
+        categorical_features=categorical_features
+    )
+
+
+    monitoring_pipeline.run_reports()

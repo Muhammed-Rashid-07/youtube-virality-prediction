@@ -64,7 +64,7 @@ class DataPreprocessing:
         return df
 
 
-@step(enable_cache=True)
+@step(enable_cache=False)
 def cleaning_data(df: pd.DataFrame) -> pd.DataFrame:
     """
     Step for cleaning data by using the DataPreprocessing class.

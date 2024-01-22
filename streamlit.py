@@ -9,6 +9,16 @@ import streamlit as st
 from steps.prediction_service_loader import prediction_service_loader
 import datetime
 import numpy as np
+from steps.monitoring import update_monitoring
+from steps.splitter import drift_splitting
+from steps.load_test_data import load_test_data
+import logging
+
+import pandas as pd
+from steps.ingest_data import ingest_df
+from steps.data_cleaning import cleaning_data   
+
+
 
 
 def prediction():
@@ -19,9 +29,9 @@ def prediction():
      The objective here is to predict the whether a youtube video will become viral or not based on the views, likes , dislikes ,comments, title length etc.   """
     )
     
+    df = load_test_data()
     
-    
-    
+    reference_data, current_data = drift_splitting(df)
     
     trending_date = st.date_input("Trending Date of the video: ", format="YYYY/MM/DD")
     video_title = st.text_input("Title of the video: ")
@@ -52,7 +62,6 @@ def prediction():
             run_main()
         try:
             data = {
-
                 "likes": likes,
                 "dislikes": dislikes,
                 "comment_count": comments,
@@ -66,22 +75,23 @@ def prediction():
                 "description_words_count": len(description.split()),
                 "time_since_publish": time_since_publish,
             }
-            # Convert the data point to a Series and then to a DataFrame
-            # Convert the data point to a Series and then to a DataFrame
-            data_point_series = pd.Series(data)
-            data_point_df = pd.DataFrame(data_point_series).T
 
-            # Convert the DataFrame to a JSON list
-            json_list = json.loads(data_point_df.to_json(orient="records"))
-            data = np.array(json_list)
-            for i in range(len(data)):
-                logging.info(data[i])
-            pred = service.predict(data)
-            logging.info(pred)
+            # Convert the data point to a DataFrame
+            data_point_df = pd.DataFrame(data, index=[0])
+
+            # Predict and add prediction column
+            pred = service.predict(data_point_df)
+            data_point_df['prediction'] = pred
+
+            # Update the reports based on the current prediction
+            update_monitoring(reference_data, current_data, data_point_df, service)
+
             st.success(f"Youtube Virality prediction: {'Viral' if pred == 1 else 'Not Viral'}")
         except Exception as e:
             logging.error(e)
             raise e
+
+
 
 
 def display_report(report_path: str):
@@ -121,7 +131,6 @@ def run_reports():
 def main():
     st.sidebar.title("Options")
     selection = st.sidebar.radio("Select an option", ["Prediction", "Reports"])
-    
     if selection == "Prediction":
         prediction()
     if selection == "Reports":

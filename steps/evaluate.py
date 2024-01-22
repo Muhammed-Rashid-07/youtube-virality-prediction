@@ -13,8 +13,10 @@ import mlflow
 from mlflow.pyfunc import PyFuncModel
 from typing_extensions import Union
 
+
 # Get the active MLFlow experiment tracker from the ZenML client
 experiment_tracker = Client().active_stack.experiment_tracker
+
 
 # Ensure that the active stack contains an MLFlow experiment tracker
 if not experiment_tracker or not isinstance(
@@ -24,6 +26,7 @@ if not experiment_tracker or not isinstance(
         "Your active stack needs to contain a MLFlow experiment tracker for "
         "this example to work."
     )
+
 
 # Define a ZenML step for model evaluation using MLFlow
 @step(experiment_tracker=experiment_tracker.name, enable_cache=False)

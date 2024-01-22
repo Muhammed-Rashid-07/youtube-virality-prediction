@@ -1,9 +1,15 @@
 from azure.storage.blob import BlobServiceClient
-from config.constant import storage_account_key, storage_account_name, connection_string, container_name, file_path_up, file_name
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-def uploadToBlobStorage():
+def uploadToBlobStorage(file_path, file_name):
     try:
+        storage_account_key = os.getenv('STORAGE_ACCOUNT_KEY')
+        storage_account_name = os.getenv('STORAGE_ACCOUNT_NAME')
+        connection_string = os.getenv('CONNECTION_STRING')
+        container_name = os.getenv('CONTAINER_NAME')
         blob_service_client = BlobServiceClient.from_connection_string(connection_string)
         blob_client = blob_service_client.get_blob_client(container = container_name, blob = file_name)
 
@@ -14,6 +20,6 @@ def uploadToBlobStorage():
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
-uploadToBlobStorage()
+uploadToBlobStorage('file_path','file_name')
 
 
